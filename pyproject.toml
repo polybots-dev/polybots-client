@@ -1,0 +1,15 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "polybots-client"
+version = "0.1.0"
+description = "Connect a bot to private multiplayer games of The Battle of Polytopia."
+readme = "README.md"
+license = { text = "Apache-2.0" }
+requires-python = ">=3.11"
+dependencies = ["requests>=2.31", "websocket-client>=1.7", "certifi"]
+
+[tool.setuptools]
+packages = ["polybots_client"]

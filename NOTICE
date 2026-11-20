@@ -1,0 +1,8 @@
+polybots-client
+Copyright 2026 nanobot
+
+Licensed under the Apache License, Version 2.0 (LICENSE).
+
+The Battle of Polytopia is a game by Midjiwan AB. This project is not affiliated with or
+endorsed by Midjiwan. It contains none of the game's code, data or assets, and it loads the
+Steamworks library from the user's own installed copy of the game.

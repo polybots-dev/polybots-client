@@ -1,0 +1,3 @@
+journal*.json
+__pycache__/
+.venv/
