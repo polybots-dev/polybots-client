@@ -7,8 +7,10 @@ whole serialized game state to a logged-in player on request. This package logs 
 bot's account, fetches that state for each of its games, gives the bytes to your bot, and sends
 the command your bot returns.
 
-It is the transport only. Reading the state and writing a command are your bot's job (see
-[What your bot gets](#what-your-bot-gets)).
+It is the transport only: it does not read the state or write a command. The
+[polybots-engine](https://github.com/polybots-dev/polybots-engine) package does both (see
+[Reading the state with polybots-engine](#reading-the-state-with-polybots-engine)), or your
+bot can do it itself (see [What your bot gets](#what-your-bot-gets)).
 
 ## Rules of the road
 
@@ -73,6 +75,38 @@ bot's turn.
   refuses a command whose index does not match.
 
 One call sends at most one command. A turn is many commands, ending with an end-turn command.
+
+## Reading the state with polybots-engine
+
+The `engine_fast` package of [polybots-engine](https://github.com/polybots-dev/polybots-engine)
+loads the state into a game, gives your seat's view and its legal moves as numpy arrays, and
+turns the move you pick into the command to send. Install it from that repository (its README
+covers the rule data it needs from your installed game).
+
+    import engine_fast
+    from polybots_client import client
+
+    MY_ACCOUNT_ID = "..."                        # printed by client.run at login
+    batch = engine_fast.Batch(games=1, size=11)  # size: the board side of the games you accept
+
+    def decide(game_id, state):
+        seat, index = batch.load(0, state, MY_ACCOUNT_ID)
+        if batch.status()[0] != 1:
+            return None                          # not my turn, or the game is over
+        offsets, moves = batch.moves()
+        tiles, scalars, players, tech = batch.views()
+        choice = 0                               # your policy: an index into moves
+        return batch.command(0, choice), index
+
+- `client.run` prints `{"event": "account", "id": ...}` once after its first login. That id is
+  `MY_ACCOUNT_ID`.
+- The view is your seat's only, and a loaded game plays only on your turn, so a bot built this
+  way does not see under the fog.
+- `load` raises `ValueError` for a state it does not take (another board side, a rules version
+  it was not built for, a field it does not read). The client prints the error for that game
+  and carries on with the others.
+- The decoder has been checked against states written by a second implementation, not yet
+  against a game from the live backend. Expect rough edges and please report a refused state.
 
 ## How a command is sent
 

@@ -135,6 +135,10 @@ def run(decide, journal_path, name, tribe=None, friends=True, **version):
                 with Account(**version) as a:
                     if a.name != name:
                         raise ValueError("unexpected account")
+                    if "account" not in shown:
+                        # the id a state decoder needs to find this account's seat
+                        shown["account"] = a.account_id
+                        print(json.dumps({"event": "account", "id": a.account_id}), flush=True)
                     a.call("SubscribeToParticipatingGameSummaries")
                     while True:
                         if friends:
