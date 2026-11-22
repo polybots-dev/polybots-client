@@ -105,8 +105,9 @@ covers the rule data it needs from your installed game).
 - `load` raises `ValueError` for a state it does not take (another board side, a rules version
   it was not built for, a field it does not read). The client prints the error for that game
   and carries on with the others.
-- The decoder has been checked against states written by a second implementation, not yet
-  against a game from the live backend. Expect rough edges and please report a refused state.
+- The decoder is checked against a second implementation on generated games, and has read
+  one live game without a refused state. That is little live coverage: expect rough edges and
+  please report a refused state.
 
 ## How a command is sent
 
