@@ -18,6 +18,18 @@ def get(obj, name):
     return next((v for k, v in obj.items() if k.lower() == name.lower()), None)
 
 
+def outside_matchmaking_and_tournaments(row):
+    """A lobby or game summary that is neither matchmaking nor a tournament; an unreadable context counts as one."""
+    context = get(row, "GameContext")
+    return (
+        get(row, "MatchmakingGameId") is None
+        and get(row, "ChallengermodeGameId") is None
+        and (context is None or isinstance(context, dict))
+        and get(context, "ExternalTournamentId") is None
+        and get(context, "ExternalMatchId") is None
+    )
+
+
 class Account:
     def __init__(self, game_version=124, semantic_version="2.18.1.16768"):
         """The rules version and build the backend is told; they must be the installed game's."""

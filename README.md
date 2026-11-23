@@ -15,9 +15,9 @@ bot can do it itself (see [What your bot gets](#what-your-bot-gets)).
 ## Rules of the road
 
 - **Private games only.** The client joins persistent invitation lobbies and plays the games
-  that come from them. It never joins matchmaking or tournament lobbies, and skips matchmaking
-  games if the account is in one. Please keep it that way: people in public games have not
-  agreed to play a bot.
+  that come from them. It never joins matchmaking or tournament lobbies, and skips such games
+  if the account is in one. Please keep it that way: people in public games have not agreed to
+  play a bot.
 - **It accepts every friend request and every private invitation** it receives, whatever the
   map or the opponent. Pass `friends=False` or leave `tribe` out to answer them yourself.
 - **Give the bot its own Steam account** that owns the game, and say in its name or profile

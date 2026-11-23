@@ -126,6 +126,21 @@ class Tests(unittest.TestCase):
         ]
         self.assertEqual(client.games(a), ([GAME], [ME]))
 
+    def test_tournament_games_are_left_out(self):
+        a = Fake()
+        a.summaries = [
+            {"gameId": GAME, "dateEnded": None, "gameContext": {"externalTournamentId": None}},
+            {"gameId": ME, "dateEnded": None, "gameContext": {"externalTournamentId": ME}},
+            {"gameId": ME, "dateEnded": None, "gameContext": {"externalMatchId": ME}},
+            {"gameId": ME, "dateEnded": None, "gameContext": "unreadable"},
+        ]
+        self.assertEqual(client.games(a), ([GAME], []))
+
+    def test_tournament_lobbies_are_not_joined(self):
+        self.assertTrue(client.private(lobby(gameContext=None)))
+        for context in ({"externalTournamentId": ME}, {"externalMatchId": ME}, ["unreadable"]):
+            self.assertFalse(client.private(lobby(gameContext=context)))
+
     def test_a_state_of_another_version_or_size_is_refused(self):
         for raw in (struct.pack("<i", 123) + b"state", V + bytes(4 * 1024 * 1024)):
             a = Fake()

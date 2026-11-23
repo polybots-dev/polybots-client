@@ -16,7 +16,7 @@ import struct
 import time
 import uuid
 
-from .account import Account, get
+from .account import Account, get, outside_matchmaking_and_tournaments
 from .friends import save, tick as accept_friends
 
 NO_LOBBY = str(uuid.UUID(int=0))  # a started game is read by its own id
@@ -24,11 +24,7 @@ NO_LOBBY = str(uuid.UUID(int=0))  # a started game is read by its own id
 
 def private(lobby):
     """A persistent invitation lobby. Matchmaking and tournament lobbies are never joined."""
-    return (
-        get(lobby, "IsPersistent") is True
-        and get(lobby, "MatchmakingGameId") is None
-        and get(lobby, "ChallengermodeGameId") is None
-    )
+    return get(lobby, "IsPersistent") is True and outside_matchmaking_and_tournaments(lobby)
 
 
 def accept_invitations(a, tribe):
@@ -59,13 +55,13 @@ def accept_invitations(a, tribe):
 
 
 def games(a):
-    """This account's games as (open, ended) id lists, matchmaking games left out."""
+    """This account's games as (open, ended) id lists, matchmaking and tournament games left out."""
     summaries = a.call("GetGameSummariesByParticipation")
     if not isinstance(summaries, list):
         raise ValueError("unsupported game list")
     found = ([], [])
     for g in summaries:
-        if get(g, "MatchmakingGameId") is None:
+        if outside_matchmaking_and_tournaments(g):
             found[get(g, "DateEnded") is not None].append(str(uuid.UUID(get(g, "GameId"))))
     return found
 
