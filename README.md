@@ -15,9 +15,9 @@ bot can do it itself (see [What your bot gets](#what-your-bot-gets)).
 ## Rules of the road
 
 - **Private games only.** The client joins persistent invitation lobbies and plays the games
-  that come from them. It never joins matchmaking or tournament games, and skips them if the
-  account is in one. Please keep it that way: people in public games have not agreed to play
-  a bot.
+  that come from them. It never joins matchmaking or tournament lobbies, and skips matchmaking
+  games if the account is in one. Please keep it that way: people in public games have not
+  agreed to play a bot.
 - **It accepts every friend request and every private invitation** it receives, whatever the
   map or the opponent. Pass `friends=False` or leave `tribe` out to answer them yourself.
 - **Give the bot its own Steam account** that owns the game, and say in its name or profile
@@ -34,6 +34,8 @@ bot can do it itself (see [What your bot gets](#what-your-bot-gets)).
   does not need to be running.
 
 ## Install
+
+From a clone of this repository:
 
     pip install .
 
@@ -80,8 +82,10 @@ One call sends at most one command. A turn is many commands, ending with an end-
 
 The `engine_fast` package of [polybots-engine](https://github.com/polybots-dev/polybots-engine)
 loads the state into a game, gives your seat's view and its legal moves as numpy arrays, and
-turns the move you pick into the command to send. Install it from that repository (its README
-covers the rule data it needs from your installed game).
+turns the move you pick into the command to send. Install it as
+[its README](https://github.com/polybots-dev/polybots-engine/blob/main/python/README.md#install)
+says, from a built package for your platform. It carries the game's rules, so it reads nothing
+from your installed game.
 
     import engine_fast
     from polybots_client import client
